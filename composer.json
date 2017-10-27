@@ -1,5 +1,5 @@
 {
-    "name": "51idc/qcloudapi-sdk-php",
+    "name": "anchnet/qcloudapi-sdk-php",
     "keywords": ["tencentyun", "qcloud", "sdk"],
     "homepage": "http://www.qcloud.com/",
     "license": "MIT",
