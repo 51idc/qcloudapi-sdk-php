@@ -103,7 +103,7 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
 
         return $this->_dealResponse($response);
     }
-
+ 
     /**
      * _dispatchRequest
      * 发起接口请求
