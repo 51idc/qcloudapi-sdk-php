@@ -8,6 +8,7 @@ namespace QcloudApi;
 
 use QcloudApi\Common\QcloudApiCommonBase;
 use QcloudApi\Common\QcloudApiCommonRequest;
+use QcloudApi\Http\HttpResponse;
 
 abstract class QcloudApiModuleBase extends QcloudApiCommonBase
 {
@@ -65,15 +66,19 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
     {
         $action = ucfirst($name);
         $params = [
-            'SecretId'      => $this->profile->getSecretId(),
-            'SecretKey'     => $this->profile->getSecretKey(),
-            'Region'        => $this->profile->getRegion(),
+            'SecretId'  => $this->profile->getSecretId(),
+            'SecretKey' => $this->profile->getSecretKey(),
+            'Region'    => $this->profile->getRegion(),
         ];
         $params = array_merge(
             $params,
             isset($arguments[0]) ? $arguments[0] : []
         );
         $params['Action'] = $action;
+
+        if (isset($arguments[0]['RequestMethod'])) {
+            $this->requestMethod = $arguments[0]['RequestMethod'];
+        }
 
         return QcloudApiCommonRequest::generateUrl($params,
             $this->requestMethod,
@@ -107,17 +112,22 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
         $action = ucfirst($name);
 
         $params = [
-            'SecretId'      => $this->profile->getSecretId(),
-            'SecretKey'     => $this->profile->getSecretKey(),
-            'Region'        => $this->profile->getRegion(),
+            'SecretId'  => $this->profile->getSecretId(),
+            'SecretKey' => $this->profile->getSecretKey(),
+            'Region'    => $this->profile->getRegion(),
         ];
         $params = array_merge(
             $params,
             isset($arguments[0]) ? $arguments[0] : []
         );
+
+        if (isset($arguments[0]['RequestMethod'])) {
+            $this->requestMethod = $arguments[0]['RequestMethod'];
+        }
+
         $params['Action'] = $action;
 
-        $response = QcloudApiCommonRequest::send($params,$this->requestMethod,
+        $response = QcloudApiCommonRequest::send($params, $this->requestMethod,
             $this->serverHost, $this->serverUri);
 
         return $response;
@@ -126,32 +136,25 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
     /**
      * _dealResponse
      * 处理返回
-     * @param  array $rawResponse
-     * @return
+     * @param HttpResponse $httpResponse
+     * @return bool|HttpResponse
      */
-    protected function _dealResponse($rawResponse)
+    protected function _dealResponse(HttpResponse $httpResponse)
     {
-        if (!is_array($rawResponse) || (!isset($rawResponse['code']) && !isset($rawResponse['Response']))) {
-            $this->setError("", 'request falied!');
-            return false;
+        $body = json_decode($httpResponse->getBody());
+
+        if (false == $httpResponse->isSuccess()) {
+            throw new \Exception($body->message, $body->code, $httpResponse->getStatus());
         }
 
-        if ($rawResponse['code']) {
+        if ($body->code) {
             $ext = '';
-            if (isset($rawResponse['detail'])) {
+            if (isset($body->detail)) {
                 // 批量异步操作，返回任务失败信息
-                $ext = $rawResponse['detail'];
+                $ext = $body->detail;
             }
-            $this->setError($rawResponse['code'], $rawResponse['message'], $ext);
-            return false;
+            throw new \Exception($body->code, $body->message, $ext);
         }
-
-        unset($rawResponse['code'], $rawResponse['message']);
-
-        if (count($rawResponse)) {
-            return $rawResponse;
-        } else {
-            return true;
-        }
+        return $body;
     }
 }

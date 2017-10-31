@@ -5,6 +5,8 @@
 
 namespace QcloudApi\Common;
 
+use QcloudApi\Http\HttpHelper;
+
 class QcloudApiCommonRequest
 {
     /**
@@ -27,13 +29,13 @@ class QcloudApiCommonRequest
      */
     protected static $_version = 'SDK_PHP_1.1';
 
-    /**
-     * $_timeOut
-     * 设置连接主机的超时时间
-     * @var int 数量级：秒
-     * */
-    protected static $_timeOut = 10;
-
+//    /**
+//     * $_timeOut
+//     * 设置连接主机的超时时间
+//     * @var int 数量级：秒
+//     * */
+//    protected static $_timeOut = 10;
+//    protected static $_connectTimeout = 30;//30 second
     /**
      * getRequestUrl
      * 获取请求url
@@ -104,7 +106,7 @@ class QcloudApiCommonRequest
      * @param  string $requestPath url路径
      * @return
      */
-    public static function send($paramArray, $requestMethod,$requestHost, $requestPath)
+    public static function send($paramArray, $requestMethod,$requestHost, $requestPath,$autoRetry = true, $maxRetryNumber = 3)
     {
         if (!isset($paramArray['Nonce'])) {
             $paramArray['Nonce'] = rand(1, 65535);
@@ -126,53 +128,64 @@ class QcloudApiCommonRequest
 
         $url = 'https://' . $requestHost . $requestPath;
 
-        $ret = self::_sendRequest($url, $paramArray,$requestMethod);
+//        $ret = self::_sendRequest($url, $paramArray,$requestMethod);
+        $httpResponse = HttpHelper::curl($url,$paramArray,$requestMethod);
+        $retryTimes = 1;
+        while (500 <= $httpResponse->getStatus() && $autoRetry && $retryTimes < $maxRetryNumber) {
+            $httpResponse = HttpHelper::curl($url, $paramArray,$requestMethod);
+            $retryTimes ++;
+        }
 
-        return $ret;
+        return $httpResponse;
     }
 
-    /**
-     * _sendRequest
-     * @param  string $url 请求url
-     * @param  array $paramArray 请求参数
-     * @param  string $method 请求方法
-     * @return
-     */
-    protected static function _sendRequest($url, $paramArray, $method = 'POST')
-    {
 
-        $ch = curl_init();
-
-        if ($method == 'POST') {
-            $paramArray = is_array($paramArray) ? http_build_query($paramArray) : $paramArray;
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $paramArray);
-        } else {
-            $url .= '?' . http_build_query($paramArray);
-        }
-
-        self::$_requestUrl = $url;
-
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, self::$_timeOut);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        if (false !== strpos($url, "https")) {
-            // 证书
-            // curl_setopt($ch,CURLOPT_CAINFO,"ca.crt");
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        }
-        $resultStr = curl_exec($ch);
-
-        self::$_rawResponse = $resultStr;
-
-        $result = json_decode($resultStr, true);
-        if (!$result) {
-            return $resultStr;
-        }
-        return $result;
-    }
+//    /**
+//     * _sendRequest
+//     * @param  string $url 请求url
+//     * @param  array $paramArray 请求参数
+//     * @param  string $method 请求方法
+//     * @return
+//     */
+//    protected static function _sendRequest($url, $paramArray, $method = 'POST')
+//    {
+//        $ch = curl_init();
+//
+//        if ($method == 'POST') {
+//            $paramArray = is_array($paramArray) ? http_build_query($paramArray) : $paramArray;
+//            curl_setopt($ch, CURLOPT_POST, 1);
+//            curl_setopt($ch, CURLOPT_POSTFIELDS, $paramArray);
+//        } else {
+//            $url .= '?' . http_build_query($paramArray);
+//        }
+//
+//        self::$_requestUrl = $url;
+//
+//        curl_setopt($ch, CURLOPT_URL, $url);
+//        curl_setopt($ch, CURLOPT_FAILONERROR, false);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//        if(self::$_timeOut){
+//            curl_setopt($ch, CURLOPT_TIMEOUT, self::$_timeOut);
+//        }
+//        if (self::$_connectTimeout) {
+//            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::$_connectTimeout);
+//        }
+//
+//        if (false !== strpos($url, "https")) {
+//            // 证书
+//            // curl_setopt($ch,CURLOPT_CAINFO,"ca.crt");
+//            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+//            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+//        }
+//        $resultStr = curl_exec($ch);
+//
+//        self::$_rawResponse = $resultStr;
+//
+//        $result = json_decode($resultStr, true);
+//        if (!$result) {
+//            return $resultStr;
+//        }
+//        return $result;
+//    }
 }
 

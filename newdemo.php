@@ -18,10 +18,10 @@ include __DIR__ . '/vendor/autoload.php';
 //$base = new DemoBase;
 //var_dump($base);
 
-$api = new QcloudApi\QcloudApi(QcloudApi\QcloudApi::MODULE_ACCOUNT, new \QcloudApi\Profile('aaaa', 'bbbb', 'cn-shanghai'));
+$api = new QcloudApi\QcloudApi(QcloudApi\QcloudApi::MODULE_CVM, new \QcloudApi\Profile('aaaa', 'bbbb', 'gz'));
 //var_dump($api);
 
-$ret = $api->DescribeInstances();
+$ret = $api->DescribeRegions();
 //$ret=$api->generateUrl('DescribeInstances',[]);
 var_dump($ret);
 
