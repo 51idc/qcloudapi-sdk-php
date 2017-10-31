@@ -26,7 +26,7 @@ class QcloudApiCommonSign
                 $retStr = base64_encode(hash_hmac('sha256', $srcStr, $secretKey, true));
                 break;
             default:
-                throw new Exception($method . ' is not a supported encrypt method');
+                throw new \Exception($method . ' is not a supported encrypt method');
                 return false;
                 break;
         }

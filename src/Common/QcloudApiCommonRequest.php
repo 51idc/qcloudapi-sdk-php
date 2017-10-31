@@ -85,10 +85,10 @@ class QcloudApiCommonRequest
         }
 
         $paramArray['RequestClient'] = self::$_version;
-        $plainText = QcloudApi_Common_Sign::makeSignPlainText($paramArray,
+        $plainText = QcloudApiCommonSign::makeSignPlainText($paramArray,
             $requestMethod, $requestHost, $requestPath);
 
-        $paramArray['Signature'] = QcloudApi_Common_Sign::sign($plainText, $secretKey, $signMethod);
+        $paramArray['Signature'] = QcloudApiCommonSign::sign($plainText, $secretKey, $signMethod);
 
         $url = 'https://' . $requestHost . $requestPath;
         if ($requestMethod == 'GET') {

@@ -8,7 +8,7 @@ namespace QcloudApi;
  * QcloudApi
  * SDK入口文件
  */
-class QcloudApi
+class QcloudApi extends QcloudApiModuleBase
 {
     /**
      * MODULE_ACCOUNT
@@ -176,16 +176,43 @@ class QcloudApi
 
 
     protected $moduleHosts = [
-        self::MODULE_ACCOUNT => 'account.api.qcloud.com',
-        //
+        self::MODULE_ACCOUNT   => 'account.api.qcloud.com',
+        self::MODULE_BILL      => 'bill.api.qcloud.com',
+        self::MODULE_BM        => 'bm.api.qcloud.com',
+        self::MODULE_BMEIP     => 'bmeip.api.qcloud.com',
+        self::MODULE_BMLB      => 'bmlb.api.qcloud.com',
+        self::MODULE_BMVPC     => 'bmvpc.api.qcloud.com',
+        self::MODULE_CBS       => 'cbs.api.qcloud.com',
+        self::MODULE_CDB       => 'cdb.api.qcloud.com',
+        self::MODULE_CDN       => 'cdn.api.qcloud.com',
+        self::MODULE_CMEM      => 'cmem.api.qcloud.com',
+        self::MODULE_CNS       => 'cns.api.qcloud.com',
+        self::MODULE_CVM       => 'cvm.api.qcloud.com',
+        self::MODULE_EIP       => 'eip.api.qcloud.com',
+        self::MODULE_FEECENTER => 'feecenter.api.qcloud.com',
+        self::MODULE_IMAGE     => 'image.api.qcloud.com',
+        self::MODULE_LB        => 'lb.api.qcloud.com',
+        self::MODULE_LIVE      => 'live.api.qcloud.com',
+        self::MODULE_MARKET    => 'market.api.qcloud.com',
+        self::MODULE_MONITOR   => 'monitor.api.qcloud.com',
+        self::MODULE_SCALING   => 'Scaling.api.qcloud.com',
+        self::MODULE_SEC       => 'csec.api.qcloud.com',
+        self::MODULE_SNAPSHOT  => 'snapshot.api.qcloud.com',
+        self::MODULE_TDSQL     => 'tdsql.api.qcloud.com',
+        self::MODULE_TRADE     => 'trade.api.qcloud.com',
+        self::MODULE_VOD       => 'vod.api.qcloud.com',
+        self::MODULE_VPC       => 'vpc.api.qcloud.com',
+        self::MODULE_WENZHI    => 'wenzhi.api.qcloud.com',
+        self::MODULE_YUNSOU    => 'yunsou.api.qcloud.com'
     ];
 
-    protected $secretId = '';
-    protected $secretKey = '';
-    protected $requestMethod = 'GET';
-
-    protected $module;
-    protected $profile;
+//    protected $secretId = '';
+//    protected $secretKey = '';
+//    protected $requestMethod = 'GET';
+//
+//    protected $module;
+//    protected $profile;
+//    protected $serverHost = '';
 
     /**
      * QcloudApi constructor.
@@ -196,15 +223,16 @@ class QcloudApi
     {
         $this->module = $module;
         $this->profile = $profile;
+        $this->serverHost = $this->getModuleHost();
     }
 
-    /**
-     * @param string $requestMethod
-     */
-    public function setRequestMethod(string $requestMethod)
-    {
-        $this->requestMethod = $requestMethod;
-    }
+//    /**
+//     * @param $requestMethod
+//     */
+//    public function setRequestMethod( $requestMethod)
+//    {
+//        $this->requestMethod = $requestMethod;
+//    }
 
     public function getModuleHost()
     {
@@ -214,24 +242,24 @@ class QcloudApi
         throw new \Exception("unknown module `{$this->module}`");
     }
 
-    public function __call($method, $arguments)
-    {
-        $requestParams = [
-            'SecretId'  => $this->profile->getSecretId(),
-            'SecretKey' => $this->profile->getSecretKey(),
-            'RegionId'  => $this->profile->getRegion(),
-        ];
-        $requestParams = array_merge(
-            $requestParams,
-            isset($arguments[0]) ? $arguments[0] : []
-        );
-        var_dump($requestParams);
-        $serverHost = $this->getModuleHost();
-
-        var_dump($serverHost);
-
-        return true;
-    }
+//    public function __call($method, $arguments)
+//    {
+//        $requestParams = [
+//            'SecretId'  => $this->profile->getSecretId(),
+//            'SecretKey' => $this->profile->getSecretKey(),
+//            'RegionId'  => $this->profile->getRegion(),
+//        ];
+//        $requestParams = array_merge(
+//            $requestParams,
+//            isset($arguments[0]) ? $arguments[0] : []
+//        );
+//        var_dump( 222,$requestParams);
+//        $serverHost = $this->getModuleHost();
+//
+//        var_dump($serverHost);
+//
+//        return true;
+//    }
 
 
     /**

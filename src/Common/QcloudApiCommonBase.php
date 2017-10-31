@@ -24,9 +24,7 @@ abstract class QcloudApiCommonBase
      */
     public function setError($code, $message, $ext = '')
     {
-        require_once QCLOUDAPI_ROOT_PATH . '/Common/Error.php';
-
-        $this->_error = new QcloudApi_Common_Error($code, $message, $ext);
+        $this->_error = new \QcloudApi\Common\QcloudApiCommonError($code, $message, $ext);
         return $this->_error;
     }
 

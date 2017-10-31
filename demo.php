@@ -1,6 +1,5 @@
 <?php
 error_reporting(E_ALL ^ E_NOTICE);
-require_once './src/QcloudApi/QcloudApi.php';
 
 
 $config = array('SecretId'       => '你的secretId',
