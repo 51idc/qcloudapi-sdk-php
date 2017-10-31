@@ -2,6 +2,16 @@
 
 qcloudapi-sdk-php是为了让PHP开发者能够在自己的代码里更快捷方便的使用腾讯云的API而开发的SDK工具包。
 
+基于官方初级版本完全重构，不兼容原使用用法。
+腾讯 SDK 尿性你懂得 WTF!
+
+#### 新特性
+
+ - 遵循 PSR-4 规范；
+ - 支持 Composer 加载方式；
+ - 丰富的异常捕获；
+ - 支持 Proxy、Retry、Timeout；
+
 #### 更新历史
 
 * [2017/9/11] 新增Bmeip和Bmvpc模块
