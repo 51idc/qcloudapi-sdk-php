@@ -13,14 +13,12 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
 {
     protected $module;
     protected $profile;
-//    protected $secretId = '';
-//    protected $secretKey = '';
     /**
      * $_requestMethod
      * 请求方法
      * @var string
      */
-//    protected $requestMethod = 'GET';
+    protected $requestMethod = 'GET';
 
     /**
      * $serverHost
@@ -30,11 +28,11 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
     protected $serverHost = '';
 
     /**
-     * $_serverUri
+     * $serverUri
      * url路径
      * @var string
      */
-    protected $_serverUri = '/v2/index.php';
+    protected $serverUri = '/v2/index.php';
 
     /**
      * getLastRequest
@@ -60,23 +58,27 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
      * generateUrl
      * 生成请求的URL，不发起请求
      * @param  string $name 接口方法名
-     * @param  array $params 请求参数
+     * @param  array $arguments 请求参数
      * @return
      */
-    public function generateUrl($name, $params)
+    public function generateUrl($name, $arguments)
     {
         $action = ucfirst($name);
+        $params = [
+            'SecretId'      => $this->profile->getSecretId(),
+            'SecretKey'     => $this->profile->getSecretKey(),
+            'Region'        => $this->profile->getRegion(),
+        ];
+        $params = array_merge(
+            $params,
+            isset($arguments[0]) ? $arguments[0] : []
+        );
         $params['Action'] = $action;
 
-        if (!isset($params['Region'])) {
-            $params['Region'] = $this->_defaultRegion;
-        }
-
-        return QcloudApiCommonRequest::generateUrl($params, $this->_secretId, $this->_secretKey,
-            $this->_requestMethod,
-            $this->_serverHost, $this->_serverUri);
+        return QcloudApiCommonRequest::generateUrl($params,
+            $this->requestMethod,
+            $this->serverHost, $this->serverUri);
     }
-
 
 
     /**
@@ -88,22 +90,11 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
      */
     public function __call($name, $arguments)
     {
-        $requestParams = [
-            'SecretId'      => $this->profile->getSecretId(),
-            'SecretKey'     => $this->profile->getSecretKey(),
-            'DefaultRegion' => $this->profile->getRegion(),
-            'RequestMethod' => 'GET',
-        ];
-        $requestParams = array_merge(
-            $requestParams,
-            isset($arguments[0]) ? $arguments[0] : []
-        );
-        //todo $arguments->$requestParams
         $response = $this->_dispatchRequest($name, $arguments);
 
         return $this->_dealResponse($response);
     }
- 
+
     /**
      * _dispatchRequest
      * 发起接口请求
@@ -115,19 +106,19 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
     {
         $action = ucfirst($name);
 
-        $params = [];
-        if (is_array($arguments) && !empty($arguments)) {
-            $params = (array)$arguments[0];
-        }
+        $params = [
+            'SecretId'      => $this->profile->getSecretId(),
+            'SecretKey'     => $this->profile->getSecretKey(),
+            'Region'        => $this->profile->getRegion(),
+        ];
+        $params = array_merge(
+            $params,
+            isset($arguments[0]) ? $arguments[0] : []
+        );
         $params['Action'] = $action;
 
-        if (!isset($params['Region'])) {
-            $params['Region'] = $this->_defaultRegion;
-        }
-
-
-        $response = QcloudApiCommonRequest::send($params, $this->_secretId, $this->_secretKey, $this->_requestMethod,
-            $this->_serverHost, $this->_serverUri);
+        $response = QcloudApiCommonRequest::send($params,$this->requestMethod,
+            $this->serverHost, $this->serverUri);
 
         return $response;
     }

@@ -11,9 +11,9 @@ namespace QcloudApi;
 class Profile
 {
 
-    protected $secretId;
-    protected $secretKey;
-    protected $region;
+    protected $secretId = "";
+    protected $secretKey = "";
+    protected $region = "";
 
     /**
      * Profile constructor.

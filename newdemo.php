@@ -22,6 +22,7 @@ $api = new QcloudApi\QcloudApi(QcloudApi\QcloudApi::MODULE_ACCOUNT, new \QcloudA
 //var_dump($api);
 
 $ret = $api->DescribeInstances();
+//$ret=$api->generateUrl('DescribeInstances',[]);
 var_dump($ret);
 
 //$api2 = new QcloudApi\QcloudApi(QcloudApi\QcloudApi::MODULE_ACCOUNT, new \QcloudApi\Profile('aaaa', 'bbbb', 'cn-beijing'));
