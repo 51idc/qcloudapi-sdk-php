@@ -18,7 +18,7 @@ include __DIR__ . '/vendor/autoload.php';
 //$base = new DemoBase;
 //var_dump($base);
 
-$api = new QcloudApi\QcloudApi(QcloudApi\QcloudApi::MODULE_CVM, new \QcloudApi\Profile('aaaa', 'bbbb', 'gz'));
+$api = new QcloudApi\QcloudApi(QcloudApi\QcloudApi::MODULE_CVM, new \QcloudApi\Profile('AKIDSoz50qQbJqBKI4FLitysbCf9Tfkeq2XR', 'wjLm4CCGDza4NWTM5g6LPM9lMuMh1FOR', 'gz'));
 //var_dump($api);
 
 $ret = $api->DescribeRegions();

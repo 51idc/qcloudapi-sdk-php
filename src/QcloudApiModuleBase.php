@@ -8,6 +8,7 @@ namespace QcloudApi;
 
 use QcloudApi\Common\QcloudApiCommonBase;
 use QcloudApi\Common\QcloudApiCommonRequest;
+use QcloudApi\Exception\ServerException;
 use QcloudApi\Http\HttpResponse;
 
 abstract class QcloudApiModuleBase extends QcloudApiCommonBase
@@ -142,18 +143,22 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
     protected function _dealResponse(HttpResponse $httpResponse)
     {
         $body = json_decode($httpResponse->getBody());
-
-        if (false == $httpResponse->isSuccess()) {
-            throw new \Exception($body->message, $body->code, $httpResponse->getStatus());
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new ServerException( json_last_error_msg(),-1,404);
         }
 
-        if ($body->code) {
+        if (false == $httpResponse->isSuccess()) {
+            throw new ServerException(isset($body->message) ? $body->message : 'unKnow',
+                isset($body->code) ? $body->code : -1, $httpResponse->getStatus());
+        }
+
+        if (isset($body->code)&&$body->code) {
             $ext = '';
             if (isset($body->detail)) {
                 // 批量异步操作，返回任务失败信息
                 $ext = $body->detail;
             }
-            throw new \Exception($body->code, $body->message, $ext);
+            throw new ServerException($body->code, isset($body->message) ? $body->message : 'unKnow', $ext);
         }
         return $body;
     }

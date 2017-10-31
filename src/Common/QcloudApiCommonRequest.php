@@ -29,6 +29,8 @@ class QcloudApiCommonRequest
      */
     protected static $_version = 'SDK_PHP_1.1';
 
+    private $domainParameters = array();
+
 //    /**
 //     * $_timeOut
 //     * 设置连接主机的超时时间
@@ -106,8 +108,14 @@ class QcloudApiCommonRequest
      * @param  string $requestPath url路径
      * @return
      */
-    public static function send($paramArray, $requestMethod,$requestHost, $requestPath,$autoRetry = true, $maxRetryNumber = 3)
-    {
+    public static function send(
+        $paramArray,
+        $requestMethod,
+        $requestHost,
+        $requestPath,
+        $autoRetry = true,
+        $maxRetryNumber = 3
+    ) {
         if (!isset($paramArray['Nonce'])) {
             $paramArray['Nonce'] = rand(1, 65535);
         }
@@ -122,24 +130,60 @@ class QcloudApiCommonRequest
         }
 
         $paramArray['RequestClient'] = self::$_version;
-        $plainText = QcloudApiCommonSign::makeSignPlainText($paramArray,$requestMethod,$requestHost, $requestPath);
+        $plainText = QcloudApiCommonSign::makeSignPlainText($paramArray, $requestMethod, $requestHost, $requestPath);
 
         $paramArray['Signature'] = QcloudApiCommonSign::sign($plainText, $paramArray['SecretKey'], $signMethod);
 
+        $selfObj = (new self);
         $url = 'https://' . $requestHost . $requestPath;
+        $url = $selfObj->composeUrl($url, $requestMethod, $paramArray);
+//        if (count($selfObj->getDomainParameter())>0) {
+//            $httpResponse = HttpHelper::curl($url, $requestMethod, $selfObj->getDomainParameter());
+//        } else {
+//            $httpResponse = HttpHelper::curl($url, $requestMethod, $paramArray);
+//        }
+        $httpResponse = HttpHelper::curl($url, $requestMethod, $paramArray);
 
-//        $ret = self::_sendRequest($url, $paramArray,$requestMethod);
-        $httpResponse = HttpHelper::curl($url,$paramArray,$requestMethod);
         $retryTimes = 1;
         while (500 <= $httpResponse->getStatus() && $autoRetry && $retryTimes < $maxRetryNumber) {
-            $httpResponse = HttpHelper::curl($url, $paramArray,$requestMethod);
-            $retryTimes ++;
+            $url = 'https://' . $requestHost . $requestPath;
+            $httpResponse = HttpHelper::curl($url, $requestMethod, $paramArray);
+            $retryTimes++;
         }
 
         return $httpResponse;
     }
 
+//    public function test()
+//    {
+//        $this->composeUrl();
+//    }
 
+    public function composeUrl($requestUrl, $requestMethod, $paramArray)
+    {
+        if ($requestMethod == "POST") {
+            foreach ($paramArray as $apiParamKey => $apiParamValue) {
+                $this->putDomainParameters($apiParamKey, $apiParamValue);
+            }
+            return $requestUrl;
+        } else {
+            $requestUrl = $requestUrl . "?";
+            foreach ($paramArray as $apiParamKey => $apiParamValue) {
+                $requestUrl .= "$apiParamKey=" . urlencode($apiParamValue) . "&";
+            }
+            return substr($requestUrl, 0, -1);
+        }
+    }
+
+    public function getDomainParameter()
+    {
+        return $this->domainParameters;
+    }
+
+    public function putDomainParameters($name, $value)
+    {
+        $this->domainParameters[$name] = $value;
+    }
 //    /**
 //     * _sendRequest
 //     * @param  string $url 请求url
