@@ -14,6 +14,9 @@
   "autoload": {
     "psr-4": {
       "QcloudApi\\": "src/"
-    }
+    },
+    "files":[
+      "src/constants.php"
+    ]
   }
 }
