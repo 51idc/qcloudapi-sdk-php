@@ -14,7 +14,8 @@ class Sign
      * @param  string $srcStr 拼接签名源文字符串
      * @param  string $secretKey secretKey
      * @param  string $method 请求方法
-     * @return
+     * @return bool|string
+     * @throws \Exception
      */
     public static function sign($srcStr, $secretKey, $method = 'HmacSHA1')
     {
@@ -41,12 +42,12 @@ class Sign
      * @param  string $requestMethod 请求方法
      * @param  string $requestHost 接口域名
      * @param  string $requestPath url路径
-     * @return
+     * @return string
      */
     public static function makeSignPlainText(
         $requestParams,
         $requestMethod = 'GET',
-        $requestHost = YUNAPI_URL,
+        $requestHost = 'api.qcloud.com',
         $requestPath = '/v2/index.php'
     ) {
 
@@ -65,7 +66,7 @@ class Sign
      * 拼接参数
      * @param  array $requestParams 请求参数
      * @param  string $requestMethod 请求方法
-     * @return
+     * @return string
      */
     protected static function _buildParamStr($requestParams, $requestMethod = 'GET')
     {
