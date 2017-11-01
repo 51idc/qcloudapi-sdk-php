@@ -7,7 +7,7 @@ namespace QcloudApi\Common;
 
 use QcloudApi\Http\HttpHelper;
 
-class QcloudApiCommonRequest
+class Request
 {
     /**
      * $_requestUrl
@@ -84,10 +84,10 @@ class QcloudApiCommonRequest
         }
 
         $paramArray['RequestClient'] = self::$_version;
-        $plainText = QcloudApiCommonSign::makeSignPlainText($paramArray,
+        $plainText = Sign::makeSignPlainText($paramArray,
             $requestMethod, $requestHost, $requestPath);
 
-        $paramArray['Signature'] = QcloudApiCommonSign::sign($plainText, $paramArray['SecretKey'], $signMethod);
+        $paramArray['Signature'] = Sign::sign($plainText, $paramArray['SecretKey'], $signMethod);
 
         $url = 'https://' . $requestHost . $requestPath;
         if ($requestMethod == 'GET') {
@@ -130,9 +130,9 @@ class QcloudApiCommonRequest
         }
 
         $paramArray['RequestClient'] = self::$_version;
-        $plainText = QcloudApiCommonSign::makeSignPlainText($paramArray, $requestMethod, $requestHost, $requestPath);
+        $plainText = Sign::makeSignPlainText($paramArray, $requestMethod, $requestHost, $requestPath);
 
-        $paramArray['Signature'] = QcloudApiCommonSign::sign($plainText, $paramArray['SecretKey'], $signMethod);
+        $paramArray['Signature'] = Sign::sign($plainText, $paramArray['SecretKey'], $signMethod);
 
         $selfObj = (new self);
         $url = 'https://' . $requestHost . $requestPath;

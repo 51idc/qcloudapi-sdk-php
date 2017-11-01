@@ -6,12 +6,11 @@
 
 namespace QcloudApi;
 
-use QcloudApi\Common\QcloudApiCommonBase;
-use QcloudApi\Common\QcloudApiCommonRequest;
+use QcloudApi\Common\Request;
 use QcloudApi\Exception\ServerException;
 use QcloudApi\Http\HttpResponse;
 
-abstract class QcloudApiModuleBase extends QcloudApiCommonBase
+abstract class ModuleBase
 {
     protected $module;
     protected $profile;
@@ -43,7 +42,7 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
      */
     public function getLastRequest()
     {
-        return QcloudApiCommonRequest::getRequestUrl();
+        return Request::getRequestUrl();
     }
 
     /**
@@ -53,7 +52,7 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
      */
     public function getLastResponse()
     {
-        return QcloudApiCommonRequest::getRawResponse();
+        return Request::getRawResponse();
     }
 
     /**
@@ -81,7 +80,7 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
             $this->requestMethod = $arguments[0]['RequestMethod'];
         }
 
-        return QcloudApiCommonRequest::generateUrl($params,
+        return Request::generateUrl($params,
             $this->requestMethod,
             $this->serverHost, $this->serverUri);
     }
@@ -128,7 +127,7 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
 
         $params['Action'] = $action;
 
-        $response = QcloudApiCommonRequest::send($params, $this->requestMethod,
+        $response = Request::send($params, $this->requestMethod,
             $this->serverHost, $this->serverUri);
 
         return $response;
@@ -144,7 +143,7 @@ abstract class QcloudApiModuleBase extends QcloudApiCommonBase
     {
         $body = json_decode($httpResponse->getBody());
         if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new ServerException( json_last_error_msg(),-1,404);
+            throw new ServerException( json_last_error_msg(), -1, 404);
         }
 
         if (false == $httpResponse->isSuccess()) {

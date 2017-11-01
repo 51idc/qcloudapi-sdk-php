@@ -6,7 +6,7 @@
 
 namespace QcloudApi\Common;
 
-class QcloudApiCommonSign
+class Sign
 {
     /**
      * sign

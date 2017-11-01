@@ -8,7 +8,7 @@ namespace QcloudApi;
  * QcloudApi
  * SDK入口文件
  */
-class QcloudApi extends QcloudApiModuleBase
+class QcloudApi extends ModuleBase
 {
     /**
      * MODULE_ACCOUNT
