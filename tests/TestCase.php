@@ -10,7 +10,7 @@ class TestCase extends PHPUnit_Framework_TestCase
 
     public $profile;
 
-    public $defaultRegion = 'gz';
+    public $defaultRegion = 'ap-shanghai';
 
     public function __construct($name = null, array $data = [], $dataName = '')
     {
