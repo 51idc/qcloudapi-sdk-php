@@ -129,10 +129,13 @@ class Request
             $signMethod = 'HmacSHA256';
         }
 
+        $secretKey = $paramArray['SecretKey'];
+        unset($paramArray['SecretKey']);
+
         $paramArray['RequestClient'] = self::$_version;
         $plainText = Sign::makeSignPlainText($paramArray, $requestMethod, $requestHost, $requestPath);
 
-        $paramArray['Signature'] = Sign::sign($plainText, $paramArray['SecretKey'], $signMethod);
+        $paramArray['Signature'] = Sign::sign($plainText, $secretKey, $signMethod);
 
         $selfObj = (new self);
         $url = 'https://' . $requestHost . $requestPath;
