@@ -37,26 +37,6 @@ abstract class ModuleBase
     protected $serverUri = '/v2/index.php';
 
     /**
-     * getLastRequest
-     * 获取上次请求的url
-     * @return string
-     */
-    public function getLastRequest()
-    {
-        return Request::getRequestUrl();
-    }
-
-    /**
-     * getLastResponse
-     * 获取请求的原始返回
-     * @return string
-     */
-    public function getLastResponse()
-    {
-        return Request::getRawResponse();
-    }
-
-    /**
      * generateUrl
      * 生成请求的URL，不发起请求
      * @param  string $name 接口方法名
@@ -153,7 +133,14 @@ abstract class ModuleBase
 
         if (isset($body->code) && $body->code) {
             $code = $body->code;
-            $message = isset($body->detail) ? $body->detail : 'unknown error';
+            if (isset($body->detail)) {
+                $message = $body->detail;
+            } elseif (isset($body->message)) {
+                $message = $body->message;
+            } else {
+                $message = 'unknown error';
+            }
+
             throw new ServerException($message, $code, $httpResponse->getStatus());
         }
 

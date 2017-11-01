@@ -144,6 +144,10 @@ class QcloudApi extends ModuleBase
      */
     const MODULE_TDSQL = 'tdsql';
 
+    const MODULE_DFW = 'dfw'; //安全组
+    const MODULE_SQLSERVER = 'sqlserver';
+    const MODULE_Redis = 'redis';
+    const MODULE_MONGODB = 'mongodb';
     /**
      * MODULE_BM
      * 黑石BM
@@ -188,6 +192,7 @@ class QcloudApi extends ModuleBase
         self::MODULE_CMEM      => 'cmem.api.qcloud.com',
         self::MODULE_CNS       => 'cns.api.qcloud.com',
         self::MODULE_CVM       => 'cvm.api.qcloud.com',
+        self::MODULE_DFW       => 'dfw.api.qcloud.com',
         self::MODULE_EIP       => 'eip.api.qcloud.com',
         self::MODULE_FEECENTER => 'feecenter.api.qcloud.com',
         self::MODULE_IMAGE     => 'image.api.qcloud.com',
@@ -195,7 +200,10 @@ class QcloudApi extends ModuleBase
         self::MODULE_LIVE      => 'live.api.qcloud.com',
         self::MODULE_MARKET    => 'market.api.qcloud.com',
         self::MODULE_MONITOR   => 'monitor.api.qcloud.com',
-        self::MODULE_SCALING   => 'Scaling.api.qcloud.com',
+        self::MODULE_MONGODB   => 'mongodb.api.qcloud.com',
+        self::MODULE_Redis     => 'redis.api.qcloud.com',
+        self::MODULE_SCALING   => 'scaling.api.qcloud.com',
+        self::MODULE_SQLSERVER => 'sqlserver.api.qcloud.com',
         self::MODULE_SEC       => 'csec.api.qcloud.com',
         self::MODULE_SNAPSHOT  => 'snapshot.api.qcloud.com',
         self::MODULE_TDSQL     => 'tdsql.api.qcloud.com',
@@ -205,14 +213,6 @@ class QcloudApi extends ModuleBase
         self::MODULE_WENZHI    => 'wenzhi.api.qcloud.com',
         self::MODULE_YUNSOU    => 'yunsou.api.qcloud.com'
     ];
-
-//    protected $secretId = '';
-//    protected $secretKey = '';
-//    protected $requestMethod = 'GET';
-//
-//    protected $module;
-//    protected $profile;
-//    protected $serverHost = '';
 
     /**
      * QcloudApi constructor.
@@ -226,14 +226,6 @@ class QcloudApi extends ModuleBase
         $this->serverHost = $this->getModuleHost();
     }
 
-//    /**
-//     * @param $requestMethod
-//     */
-//    public function setRequestMethod( $requestMethod)
-//    {
-//        $this->requestMethod = $requestMethod;
-//    }
-
     public function getModuleHost()
     {
         if (isset($this->moduleHosts[$this->module])) {
@@ -241,51 +233,4 @@ class QcloudApi extends ModuleBase
         }
         throw new \Exception("unknown module `{$this->module}`");
     }
-
-//    public function __call($method, $arguments)
-//    {
-//        $requestParams = [
-//            'SecretId'  => $this->profile->getSecretId(),
-//            'SecretKey' => $this->profile->getSecretKey(),
-//            'RegionId'  => $this->profile->getRegion(),
-//        ];
-//        $requestParams = array_merge(
-//            $requestParams,
-//            isset($arguments[0]) ? $arguments[0] : []
-//        );
-//        var_dump( 222,$requestParams);
-//        $serverHost = $this->getModuleHost();
-//
-//        var_dump($serverHost);
-//
-//        return true;
-//    }
-
-
-    /**
-     * load
-     * 加载模块文件
-     * @param  string $moduleName 模块名称
-     * @param  array $moduleConfig 模块配置
-     * @return
-     */
-//    public static function load($moduleName, $moduleConfig = [])
-//    {
-//        $moduleName = ucfirst($moduleName);
-//        $moduleClassFile = QCLOUDAPI_ROOT_PATH . '/Module/' . $moduleName . '.php';
-//
-//        if (!file_exists($moduleClassFile)) {
-//            return false;
-//        }
-//
-//        require_once $moduleClassFile;
-//        $moduleClassName = 'QcloudApi_Module_' . $moduleName;
-//        $moduleInstance = new $moduleClassName();
-//
-//        if (!empty($moduleConfig)) {
-//            $moduleInstance->setConfig($moduleConfig);
-//        }
-//
-//        return $moduleInstance;
-//    }
 }
