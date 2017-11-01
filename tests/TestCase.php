@@ -20,9 +20,12 @@ class TestCase extends PHPUnit_Framework_TestCase
 
     public function initProfile()
     {
-        $secretId = isset($_ENV['SECRET_ID']) ? $_ENV['SECRET_ID'] : null;
-        $secretKey = isset($_ENV['SECRET_KEY']) ? $_ENV['SECRET_KEY'] : null;
-        $this->profile = new \QcloudApi\Profile($secretId, $secretKey, $this->defaultRegion);
+        $this->profile = new \QcloudApi\Profile(
+            getenv('SECRET_ID'),
+            getenv('SECRET_KEY'),
+            getenv('REGION') ?: $this->defaultRegion
+        );
+        var_dump($this->profile);
     }
 
 }
