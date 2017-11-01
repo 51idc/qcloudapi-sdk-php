@@ -16,8 +16,6 @@ class TestCase extends PHPUnit_Framework_TestCase
     {
         parent::__construct($name, $data, $dataName);
         $this->initProfile();
-
-        var_dump($this->profile);
     }
 
     public function initProfile()
