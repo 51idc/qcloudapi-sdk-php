@@ -23,11 +23,12 @@ namespace QcloudApi\Exception;
 class ServerException extends ClientException
 {
     private $httpStatus;
+
 //    private $requestId;
 
     public function __construct($errorMessage, $errorCode, $httpStatus)
     {
-        $messageStr = $errorCode . " " . $errorMessage . " HTTP Status: " . $httpStatus;
+        $messageStr = sprintf('(%s) %s http status: %d', $errorCode, $errorMessage, $httpStatus);
         parent::__construct($messageStr, $errorCode);
         $this->setErrorMessage($errorMessage);
         $this->setErrorType("Server");

@@ -46,4 +46,12 @@ class CVMTest extends TestCase
         var_dump($ret->instanceSet);
     }
 
+    public function testDescribeInstancesNewAPI()
+    {
+        $ret = $this->client->DescribeInstances([
+            'Version' => '2017-03-12',  // New API
+        ]);
+        var_dump($ret->Response->InstanceSet);
+    }
+
 }
