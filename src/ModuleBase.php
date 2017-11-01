@@ -143,22 +143,32 @@ abstract class ModuleBase
     {
         $body = json_decode($httpResponse->getBody());
         if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new ServerException(json_last_error_msg(), -1, 404);
+            throw new ServerException(sprintf("Invalid response data: %s.", json_last_error_msg()), -1,
+                $httpResponse->getStatus());
         }
 
         if (false == $httpResponse->isSuccess()) {
-            throw new ServerException(isset($body->message) ? $body->message : 'unKnow',
-                isset($body->code) ? $body->code : -1, $httpResponse->getStatus());
+            throw new ServerException('Server not available', -1, $httpResponse->getStatus());
         }
 
         if (isset($body->code) && $body->code) {
-            $ext = '';
-            if (isset($body->detail)) {
-                // 批量异步操作，返回任务失败信息
-                $ext = $body->detail;
-            }
-            throw new ServerException($body->code, isset($body->message) ? $body->message : 'unKnow', $ext);
+            $code = $body->code;
+            $message = isset($body->detail) ? $body->detail : 'unknown error';
+            throw new ServerException($message, $code, $httpResponse->getStatus());
         }
+
+        /**
+         * 新版本 API 错误结构
+         * @link https://cloud.tencent.com/document/product/213/11658
+         */
+        if (isset($body->Response) && isset($body->Response->Error)) {
+            $error = $body->Response->Error;
+            $code = isset($error->Code) ? $error->Code : -1;
+            $message = isset($error->Message) ? $error->Message : 'unknown error';
+
+            throw new ServerException($message, $code, $httpResponse->getStatus());
+        }
+
         return $body;
     }
 }
