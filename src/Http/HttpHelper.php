@@ -1,6 +1,8 @@
 <?php
 
 namespace QcloudApi\Http;
+use QcloudApi\Exception\ClientException;
+
 class HttpHelper
 {
     /**
@@ -47,7 +49,7 @@ class HttpHelper
         $httpResponse->setBody(curl_exec($ch));
         $httpResponse->setStatus(curl_getinfo($ch, CURLINFO_HTTP_CODE));
         if (curl_errno($ch)) {
-            throw new \Exception("Server unreachable: Errno: " . curl_errno($ch) . " " . curl_error($ch), "SDK.ServerUnreachable");
+            throw new ClientException("Server unreachable: Errno: " . curl_errno($ch) . " " . curl_error($ch), "SDK.ServerUnreachable");
         }
         curl_close($ch);
 
