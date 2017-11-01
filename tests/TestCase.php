@@ -25,7 +25,6 @@ class TestCase extends PHPUnit_Framework_TestCase
             getenv('SECRET_KEY'),
             getenv('REGION') ?: $this->defaultRegion
         );
-        var_dump($this->profile);
     }
 
 }
