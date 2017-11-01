@@ -7,6 +7,7 @@
 namespace QcloudApi;
 
 use QcloudApi\Common\Request;
+use QcloudApi\Exception\ClientException;
 use QcloudApi\Exception\ServerException;
 use QcloudApi\Http\HttpResponse;
 
@@ -95,7 +96,12 @@ abstract class ModuleBase
      */
     public function __call($name, $arguments)
     {
-        $response = $this->_dispatchRequest($name, $arguments);
+        $args = count($arguments) ? $arguments[0] : [];
+        if (!is_array($args)) {
+            throw new ClientException(sprintf('The first parameter with %s must be an array, but %s given.', $name,
+                gettype($args)), -1);
+        }
+        $response = $this->_dispatchRequest($name, $args);
 
         return $this->_dealResponse($response);
     }
@@ -107,28 +113,22 @@ abstract class ModuleBase
      * @param  array $arguments 接口参数
      * @return
      */
-    protected function _dispatchRequest($name, $arguments)
+    protected function _dispatchRequest($name, array $arguments)
     {
-        $action = ucfirst($name);
-
         $params = [
+            'Action'    => ucfirst($name),
             'SecretId'  => $this->profile->getSecretId(),
             'SecretKey' => $this->profile->getSecretKey(),
             'Region'    => $this->profile->getRegion(),
         ];
-        $params = array_merge(
-            $params,
-            isset($arguments[0]) ? $arguments[0] : []
-        );
 
-        if (isset($arguments[0]['RequestMethod'])) {
-            $this->requestMethod = $arguments[0]['RequestMethod'];
+        $params = array_merge($params, $arguments);
+
+        if (isset($arguments['RequestMethod'])) {
+            $this->requestMethod = $arguments['RequestMethod'];
         }
 
-        $params['Action'] = $action;
-
-        $response = Request::send($params, $this->requestMethod,
-            $this->serverHost, $this->serverUri);
+        $response = Request::send($params, $this->requestMethod, $this->serverHost, $this->serverUri);
 
         return $response;
     }
@@ -143,7 +143,7 @@ abstract class ModuleBase
     {
         $body = json_decode($httpResponse->getBody());
         if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new ServerException( json_last_error_msg(), -1, 404);
+            throw new ServerException(json_last_error_msg(), -1, 404);
         }
 
         if (false == $httpResponse->isSuccess()) {
@@ -151,7 +151,7 @@ abstract class ModuleBase
                 isset($body->code) ? $body->code : -1, $httpResponse->getStatus());
         }
 
-        if (isset($body->code)&&$body->code) {
+        if (isset($body->code) && $body->code) {
             $ext = '';
             if (isset($body->detail)) {
                 // 批量异步操作，返回任务失败信息
