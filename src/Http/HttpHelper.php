@@ -10,8 +10,8 @@ class HttpHelper
      * 设置连接主机的超时时间
      * @var int 数量级：秒
      * */
-    protected static $_timeOut = 10;
-    protected static $_connectTimeout = 30;//30 second
+    public static $_timeOut = 10;
+    public static $_connectTimeout = 30;//30 second
 
     public static function curl($url, $requestMethod = "GET",$paramArray = null, $headers = null)
     {
