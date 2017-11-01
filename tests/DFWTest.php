@@ -6,7 +6,7 @@
  * Date: 2017/11/1
  * Time: 下午1:38
  */
-class IMAGETest extends TestCase
+class DFWTest extends TestCase
 {
     /** @var  \QcloudApi\QcloudApi */
     private $client;
@@ -14,15 +14,15 @@ class IMAGETest extends TestCase
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->client = new \QcloudApi\QcloudApi(\QcloudApi\QcloudApi::MODULE_IMAGE, $this->profile);
+        $this->client = new \QcloudApi\QcloudApi(\QcloudApi\QcloudApi::MODULE_DFW, $this->profile);
     }
 
     /**
-     * 镜像
+     * 安全组列表
      */
-    public function testDescribeImages()
+    public function testDescribeSecurityGroupEx()
     {
-        $ret = $this->client->DescribeImages(['Version' => '2017-03-12']);
+        $ret = $this->client->DescribeSecurityGroupEx();
 
         var_dump($ret);
     }

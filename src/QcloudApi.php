@@ -144,6 +144,10 @@ class QcloudApi extends ModuleBase
      */
     const MODULE_TDSQL = 'tdsql';
 
+    const MODULE_DFW = 'dfw'; //安全组
+    const MODULE_SQLSERVER = 'sqlserver';
+    const MODULE_Redis = 'redis';
+    const MODULE_MONGODB = 'mongodb';
     /**
      * MODULE_BM
      * 黑石BM
@@ -188,6 +192,7 @@ class QcloudApi extends ModuleBase
         self::MODULE_CMEM      => 'cmem.api.qcloud.com',
         self::MODULE_CNS       => 'cns.api.qcloud.com',
         self::MODULE_CVM       => 'cvm.api.qcloud.com',
+        self::MODULE_DFW       => 'dfw.api.qcloud.com',
         self::MODULE_EIP       => 'eip.api.qcloud.com',
         self::MODULE_FEECENTER => 'feecenter.api.qcloud.com',
         self::MODULE_IMAGE     => 'image.api.qcloud.com',
@@ -195,7 +200,10 @@ class QcloudApi extends ModuleBase
         self::MODULE_LIVE      => 'live.api.qcloud.com',
         self::MODULE_MARKET    => 'market.api.qcloud.com',
         self::MODULE_MONITOR   => 'monitor.api.qcloud.com',
-        self::MODULE_SCALING   => 'Scaling.api.qcloud.com',
+        self::MODULE_MONGODB   => 'mongodb.api.qcloud.com',
+        self::MODULE_Redis     => 'redis.api.qcloud.com',
+        self::MODULE_SCALING   => 'scaling.api.qcloud.com',
+        self::MODULE_SQLSERVER => 'sqlserver.api.qcloud.com',
         self::MODULE_SEC       => 'csec.api.qcloud.com',
         self::MODULE_SNAPSHOT  => 'snapshot.api.qcloud.com',
         self::MODULE_TDSQL     => 'tdsql.api.qcloud.com',

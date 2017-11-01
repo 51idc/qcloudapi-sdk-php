@@ -133,7 +133,14 @@ abstract class ModuleBase
 
         if (isset($body->code) && $body->code) {
             $code = $body->code;
-            $message = isset($body->detail) ? $body->detail : 'unknown error';
+            if (isset($body->detail)) {
+                $message = $body->detail;
+            } elseif (isset($body->message)) {
+                $message = $body->message;
+            } else {
+                $message = 'unknown error';
+            }
+
             throw new ServerException($message, $code, $httpResponse->getStatus());
         }
 
