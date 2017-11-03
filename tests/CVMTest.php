@@ -24,8 +24,8 @@ class CVMTest extends TestCase
      */
     public function testDescribeRegions()
     {
-        $ret = $this->client->DescribeRegions();
-        var_dump($ret->regionSet);
+        $ret = $this->client->DescribeRegions(['Version' => '2017-03-12']);
+        print_r($ret);
     }
 
     /**

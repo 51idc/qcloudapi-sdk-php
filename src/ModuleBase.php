@@ -14,6 +14,7 @@ use QcloudApi\Http\HttpResponse;
 abstract class ModuleBase
 {
     protected $module;
+    /** @var  Profile */
     protected $profile;
     /**
      * $_requestMethod
@@ -95,6 +96,9 @@ abstract class ModuleBase
      */
     protected function _dispatchRequest($name, array $arguments)
     {
+        if(isset($arguments['Region'])){
+            $this->profile->setRegion($arguments['Region']);
+        }
         $params = [
             'Action'    => ucfirst($name),
             'SecretId'  => $this->profile->getSecretId(),
